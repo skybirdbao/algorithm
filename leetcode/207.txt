@@ -1,0 +1,44 @@
+class Solution {
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+
+        //定义连接表
+        List<Integer>[] graph = new List[numCourses];
+        int[] indegress = new int[numCourses];
+        //初始化数据
+        for(int[] prerequisity:prerequisites){
+            List<Integer> list = graph[prerequisity[1]];
+            if(list == null){
+                list = new LinkedList<>();
+            }
+            list.add(prerequisity[0]);
+            graph[prerequisity[1]] = list;
+            indegress[prerequisity[0]]++;
+
+        }
+        int visited = 0;
+        Queue<Integer> queue = new LinkedList<>();
+        for(int i=0;i<numCourses;i++){
+            if(indegress[i]==0){
+                queue.offer(i);
+            }
+        }
+        while(!queue.isEmpty()){
+           int num =  queue.poll();
+           visited++;
+           List<Integer> list = graph[num];
+           if(list != null){
+               for(Integer listItem:list){
+                   indegress[listItem]--;
+                   if(indegress[listItem]==0){
+                       queue.offer(listItem);
+                   }
+               }
+           }
+        }
+        
+        return visited == numCourses;
+
+
+
+    }
+}
